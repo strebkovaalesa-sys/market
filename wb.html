@@ -1,0 +1,1387 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Маркетплейс 67 Coin - ФИНАЛЬНАЯ ВЕРСИЯ</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f0f2f5;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* ===== ШАПКА ===== */
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.2);
+        }
+
+        .balance-display {
+            background: rgba(255, 215, 0, 0.2);
+            padding: 12px 25px;
+            border-radius: 50px;
+            border: 2px solid #FFD700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            backdrop-filter: blur(5px);
+        }
+
+        .coin-icon {
+            font-size: 24px;
+        }
+
+        .user-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        #authSection input {
+            padding: 10px 15px;
+            margin-right: 10px;
+            border: none;
+            border-radius: 25px;
+            background: rgba(255,255,255,0.9);
+            font-size: 14px;
+        }
+
+        #authSection input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255,255,255,0.3);
+        }
+
+        button {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            margin-right: 5px;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .admin-btn {
+            background: linear-gradient(135deg, #ff6b6b, #ee5253);
+            color: white;
+        }
+
+        .role-selector {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .role-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 2px solid transparent;
+            backdrop-filter: blur(5px);
+        }
+
+        .role-btn.active {
+            background: white;
+            color: #667eea;
+            border-color: #fff;
+        }
+
+        /* ===== АДМИН ПАНЕЛЬ ===== */
+        .admin-panel {
+            background: linear-gradient(135deg, #ff6b6b20 0%, #ee525320 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border: 2px solid #ff6b6b;
+            backdrop-filter: blur(5px);
+        }
+
+        .admin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .admin-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+
+        .admin-card h3 {
+            color: #333;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ff6b6b;
+            padding-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .user-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .user-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+            transition: background 0.3s;
+        }
+
+        .user-item:hover {
+            background: #f8f9fa;
+        }
+
+        .ban-badge {
+            background: #dc3545;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* ===== ПАНЕЛЬ ПРОДАВЦА ===== */
+        #sellerPanel {
+            background: linear-gradient(135deg, #667eea20 0%, #764ba220 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border: 2px solid #667eea;
+        }
+
+        /* ===== НАВИГАЦИЯ ===== */
+        .main-nav {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+
+        .nav-btn {
+            padding: 12px 25px;
+            background: #f0f2f5;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #333;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .nav-btn.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .badge {
+            background: #ff6b6b;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* ===== ЧАТ ===== */
+        .chat-main-container {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 25px;
+            margin-top: 20px;
+            height: 650px;
+        }
+
+        .dialogs-list {
+            background: white;
+            border-radius: 15px;
+            overflow-y: auto;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+
+        .dialog-item {
+            display: flex;
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .dialog-item:hover {
+            background: #f0f7ff;
+        }
+
+        .dialog-item.active {
+            background: linear-gradient(135deg, #667eea10, #764ba210);
+            border-left: 4px solid #667eea;
+        }
+
+        .dialog-avatar {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+
+        .dialog-info {
+            flex: 1;
+        }
+
+        .dialog-name {
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 16px;
+        }
+
+        .dialog-last-message {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .dialog-time {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .unread-badge {
+            background: #ff6b6b;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .chat-window {
+            background: white;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            height: 650px;
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px 25px;
+            border-radius: 15px 15px 0 0;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 25px;
+            background: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            display: flex;
+            flex-direction: column;
+            max-width: 70%;
+        }
+
+        .message.sent {
+            align-self: flex-end;
+        }
+
+        .message.received {
+            align-self: flex-start;
+        }
+
+        .message-content {
+            padding: 12px 20px;
+            border-radius: 20px;
+            position: relative;
+            word-wrap: break-word;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .message.sent .message-content {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message.received .message-content {
+            background: white;
+            color: #333;
+            border-bottom-left-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .message-time {
+            font-size: 11px;
+            color: #999;
+            margin-top: 5px;
+            margin-left: 10px;
+        }
+
+        .chat-input-area {
+            display: flex;
+            padding: 20px 25px;
+            background: white;
+            border-top: 1px solid #eee;
+            border-radius: 0 0 15px 15px;
+            gap: 15px;
+        }
+
+        .chat-input-area input {
+            flex: 1;
+            padding: 12px 20px;
+            border: 2px solid #eee;
+            border-radius: 25px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .chat-input-area input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+        }
+
+        .chat-input-area button {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 25px;
+            margin: 0;
+        }
+
+        .chat-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #999;
+            font-size: 18px;
+            gap: 20px;
+        }
+
+        /* ===== ТОВАРЫ ===== */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .product-card {
+            border: 1px solid #eee;
+            padding: 20px;
+            border-radius: 15px;
+            background: white;
+            transition: all 0.3s;
+            position: relative;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(102,126,234,0.15);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .category-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(102, 126, 234, 0.95);
+            color: white;
+            padding: 6px 15px;
+            border-radius: 25px;
+            font-size: 12px;
+            font-weight: 600;
+            backdrop-filter: blur(5px);
+        }
+
+        .price {
+            font-size: 26px;
+            color: #667eea;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+
+        .contact-seller-btn {
+            background: #ffc107;
+            color: #333;
+            width: 100%;
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .contact-seller-btn:hover {
+            background: #ffca2c;
+            transform: translateY(-2px);
+        }
+
+        /* ===== АНИМАЦИИ ===== */
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .notification {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            animation: slideIn 0.3s;
+            z-index: 1001;
+            box-shadow: 0 10px 20px rgba(40,167,69,0.2);
+        }
+
+        /* ===== АДАПТАЦИЯ ===== */
+        @media (max-width: 768px) {
+            .chat-main-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- ===== ШАПКА ===== -->
+        <header>
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <h1>🛍️ Маркетплейс 67 Coin</h1>
+            </div>
+            <div class="user-controls">
+                <div id="authSection">
+                    <div id="loginForm">
+                        <input type="text" id="username" placeholder="Логин" value="ultra67turbo">
+                        <input type="password" id="password" placeholder="Пароль" value="67govYhs">
+                        <button onclick="login()">Войти</button>
+                        <button onclick="register()">Регистрация</button>
+                    </div>
+                    <div id="userInfo" style="display: none;">
+                        <span id="currentUser"></span>
+                        <div id="balanceDisplay" class="balance-display" style="display: none;">
+                            <span class="coin-icon">🪙</span>
+                            <span id="userBalance">0</span> 67 Coin
+                        </div>
+                        <div class="role-selector">
+                            <button class="role-btn" onclick="setRole('buyer')">Покупатель</button>
+                            <button class="role-btn" onclick="setRole('seller')">Продавец</button>
+                            <button class="role-btn admin-btn" id="adminRoleBtn" style="display: none;" onclick="setRole('admin')">Админ</button>
+                        </div>
+                        <button onclick="logout()">Выйти</button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- ===== АДМИН ПАНЕЛЬ ===== -->
+        <div id="adminPanel" style="display: none;">
+            <div class="admin-panel">
+                <h2 style="color: #ff6b6b;">👑 Админ панель</h2>
+                <div class="admin-grid">
+                    <!-- Управление пользователями -->
+                    <div class="admin-card">
+                        <h3>👥 Управление пользователями</h3>
+                        <div class="user-list" id="userList"></div>
+                    </div>
+                    
+                    <!-- Начисление валюты -->
+                    <div class="admin-card">
+                        <h3>🪙 Начисление 67 Coin</h3>
+                        <select id="coinUserSelect" style="width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 10px;">
+                            <option value="">Выберите пользователя</option>
+                        </select>
+                        <input type="number" id="coinAmount" placeholder="Количество 67 Coin" min="1" style="width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 10px;">
+                        <input type="text" id="coinReason" placeholder="Причина начисления" style="width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 10px;">
+                        <button onclick="addCoins()" style="width: 100%; background: #FFD700; color: #000; padding: 12px;">Начислить 67 Coin</button>
+                    </div>
+                    
+                    <!-- Управление товарами -->
+                    <div class="admin-card">
+                        <h3>📦 Управление товарами</h3>
+                        <select id="adminProductSelect" style="width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 10px;">
+                            <option value="">Выберите товар</option>
+                        </select>
+                        <input type="number" id="newPrice" placeholder="Новая цена 67 Coin" style="width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 10px;">
+                        <button onclick="changeProductPrice()" style="width: 100%; margin-bottom: 10px; background: #667eea; color: white; padding: 12px;">Изменить цену</button>
+                        <button onclick="deleteProductAdmin()" style="width: 100%; background: #dc3545; color: white; padding: 12px;">Удалить товар</button>
+                    </div>
+                    
+                    <!-- Назначение админов -->
+                    <div class="admin-card">
+                        <h3>👑 Назначить администратора</h3>
+                        <select id="adminUserSelect" style="width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 10px;">
+                            <option value="">Выберите пользователя</option>
+                        </select>
+                        <button onclick="makeAdmin()" style="width: 100%; background: linear-gradient(135deg, #ff6b6b, #ee5253); color: white; padding: 12px;">Сделать администратором</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== ПАНЕЛЬ ПРОДАВЦА ===== -->
+        <div id="sellerPanel" style="display: none;">
+            <h2 style="margin-bottom: 20px;">📦 Панель продавца</h2>
+            <div style="background: white; padding: 25px; border-radius: 15px;">
+                <input type="text" id="productName" placeholder="Название товара" style="width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 10px;">
+                <textarea id="productDesc" placeholder="Описание товара" style="width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 10px;" rows="4"></textarea>
+                <input type="number" id="productPrice" placeholder="Цена в 67 Coin" style="width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 10px;" min="1">
+                <input type="number" id="productStock" placeholder="Количество на складе" style="width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 10px;" min="1" value="1">
+                <select id="productCategory" style="width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 10px;">
+                    <option value="electronics">📱 Электроника</option>
+                    <option value="clothing">👕 Одежда</option>
+                    <option value="home">🏠 Дом и сад</option>
+                    <option value="sports">⚽ Спорт</option>
+                    <option value="books">📚 Книги</option>
+                    <option value="other">📦 Другое</option>
+                </select>
+                <button onclick="addProduct()" style="width: 100%; padding: 15px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer;">➕ Выложить товар</button>
+            </div>
+        </div>
+
+        <!-- ===== НАВИГАЦИЯ ===== -->
+        <div class="main-nav">
+            <button class="nav-btn active" onclick="showPage('market')">
+                🏠 Товары
+            </button>
+            <button class="nav-btn" onclick="showPage('chats')">
+                💬 Сообщения
+                <span class="badge" id="unreadBadge">0</span>
+            </button>
+        </div>
+
+        <!-- ===== СТРАНИЦА ТОВАРОВ ===== -->
+        <div id="marketPage">
+            <div id="productList" class="product-grid"></div>
+        </div>
+
+        <!-- ===== СТРАНИЦА ЧАТОВ ===== -->
+        <div id="chatsPage" style="display: none;">
+            <div class="chat-main-container">
+                <!-- Список диалогов -->
+                <div class="dialogs-list" id="dialogsList"></div>
+                
+                <!-- Активный чат -->
+                <div class="chat-window" id="activeChatWindow">
+                    <div class="chat-header" id="chatHeader">
+                        <span id="chatWith">Выберите чат</span>
+                    </div>
+                    <div class="chat-messages" id="chatMessages"></div>
+                    <div class="chat-input-area" id="chatInputArea" style="display: none;">
+                        <input type="text" id="messageInput" placeholder="Введите сообщение..." onkeypress="if(event.key === 'Enter') sendMessage()">
+                        <button onclick="sendMessage()">Отправить</button>
+                    </div>
+                    <div id="chatPlaceholder" class="chat-placeholder">
+                        <div style="font-size: 64px;">💬</div>
+                        <div style="font-size: 20px;">Выберите диалог</div>
+                        <div style="color: #999;">Нажмите "Написать продавцу" на товаре</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="notification" style="display: none;" class="notification"></div>
+
+    <script>
+        // ============================================
+        // ФИНАЛЬНАЯ ВЕРСИЯ МАРКЕТПЛЕЙСА 67 COIN
+        // АДМИН: ultra67turbo / 67govYhs
+        // ============================================
+
+        // ===== ХРАНИЛИЩЕ ДАННЫХ =====
+        let users = JSON.parse(localStorage.getItem('users')) || [];
+        let products = JSON.parse(localStorage.getItem('products')) || [];
+        let orders = JSON.parse(localStorage.getItem('orders')) || [];
+        let messages = JSON.parse(localStorage.getItem('messages')) || {};
+        let currentUser = null;
+        let currentRole = 'buyer';
+        let currentChatUser = null;
+
+        // ===== ИНИЦИАЛИЗАЦИЯ =====
+        function initData() {
+            console.log('🚀 Инициализация маркетплейса...');
+            
+            // СОЗДАЕМ АДМИНА ultra67turbo
+            const adminExists = users.find(u => u.username === 'ultra67turbo');
+            if (!adminExists) {
+                const admin = {
+                    id: 999999,
+                    username: 'ultra67turbo',
+                    password: '67govYhs',
+                    isAdmin: true,
+                    role: 'admin',
+                    balance: 100000,
+                    registered: new Date().toLocaleString(),
+                    banned: false
+                };
+                users.push(admin);
+                console.log('✅ Админ ultra67turbo создан!');
+            }
+
+            // ПРОВЕРЯЕМ И ОБНОВЛЯЕМ АДМИНА
+            users.forEach(user => {
+                if (user.username === 'ultra67turbo') {
+                    user.isAdmin = true;
+                    user.role = 'admin';
+                    user.password = '67govYhs';
+                    user.balance = 100000;
+                }
+            });
+
+            // СОЗДАЕМ ПРОДАВЦА
+            if (!users.find(u => u.username === 'seller')) {
+                users.push({
+                    id: 2,
+                    username: 'seller',
+                    password: '123',
+                    isAdmin: false,
+                    role: 'user',
+                    balance: 5000,
+                    registered: new Date().toLocaleString(),
+                    banned: false
+                });
+            }
+
+            // СОЗДАЕМ ПОКУПАТЕЛЯ
+            if (!users.find(u => u.username === 'buyer')) {
+                users.push({
+                    id: 3,
+                    username: 'buyer',
+                    password: '123',
+                    isAdmin: false,
+                    role: 'user',
+                    balance: 3000,
+                    registered: new Date().toLocaleString(),
+                    banned: false
+                });
+            }
+
+            // СОЗДАЕМ ТЕСТОВЫЕ ТОВАРЫ
+            if (products.length === 0) {
+                products.push({
+                    id: 1,
+                    name: 'iPhone 13 Pro Max',
+                    description: 'Флагманский смартфон Apple, 256GB, Sierra Blue, оригинал',
+                    price: 750,
+                    stock: 5,
+                    category: 'electronics',
+                    seller: 'seller',
+                    sellerId: 2,
+                    date: new Date().toLocaleString(),
+                    views: 245,
+                    purchases: 12
+                });
+                
+                products.push({
+                    id: 2,
+                    name: 'Ноутбук ASUS ROG Strix',
+                    description: 'Игровой ноутбук, Intel Core i7, RTX 3070, 16GB RAM, 512GB SSD',
+                    price: 1200,
+                    stock: 3,
+                    category: 'electronics',
+                    seller: 'seller',
+                    sellerId: 2,
+                    date: new Date().toLocaleString(),
+                    views: 189,
+                    purchases: 7
+                });
+                
+                products.push({
+                    id: 3,
+                    name: 'Кроссовки Nike Air Max',
+                    description: 'Оригинал, размер 42-45, цвет черный/белый',
+                    price: 120,
+                    stock: 15,
+                    category: 'clothing',
+                    seller: 'seller',
+                    sellerId: 2,
+                    date: new Date().toLocaleString(),
+                    views: 567,
+                    purchases: 34
+                });
+            }
+
+            // СОЗДАЕМ ТЕСТОВЫЕ СООБЩЕНИЯ
+            const chatId = getChatId(2, 3);
+            if (!messages[chatId]) {
+                messages[chatId] = [
+                    {
+                        id: 1,
+                        from: 2,
+                        to: 3,
+                        text: 'Здравствуйте! Товар в наличии, могу сделать скидку 10%',
+                        time: new Date().toLocaleString(),
+                        read: true
+                    },
+                    {
+                        id: 2,
+                        from: 3,
+                        to: 2,
+                        text: 'Здравствуйте! Отличное предложение, оформлю заказ',
+                        time: new Date().toLocaleString(),
+                        read: false
+                    }
+                ];
+            }
+
+            // СОХРАНЯЕМ ВСЕ В LOCALSTORAGE
+            localStorage.setItem('users', JSON.stringify(users));
+            localStorage.setItem('products', JSON.stringify(products));
+            localStorage.setItem('messages', JSON.stringify(messages));
+            localStorage.setItem('orders', JSON.stringify(orders));
+
+            console.log('✅ Инициализация завершена!');
+            console.log('👑 Админ: ultra67turbo / 67govYhs');
+        }
+
+        initData();
+
+        // ===== УВЕДОМЛЕНИЯ =====
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.style.display = 'block';
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+
+        // ===== ПРОВЕРКА АДМИНА =====
+        function isAdmin() {
+            return currentUser && (currentUser.username === 'ultra67turbo' || currentUser.isAdmin === true);
+        }
+
+        // ===== ОБНОВЛЕНИЕ АДМИН ПАНЕЛИ =====
+        function updateAdminPanel() {
+            if (!isAdmin()) return;
+            
+            // Список пользователей
+            const userList = document.getElementById('userList');
+            userList.innerHTML = users.map(user => `
+                <div class="user-item">
+                    <div>
+                        <strong>${user.username}</strong>
+                        ${user.username === 'ultra67turbo' ? ' 👑' : ''}
+                        ${user.banned ? '<span class="ban-badge">Забанен</span>' : ''}
+                        <div style="color: #666; font-size: 12px;">Баланс: 🪙 ${user.balance || 0}</div>
+                    </div>
+                    <div>
+                        ${user.username !== 'ultra67turbo' ? `
+                            <button onclick="banUser(${user.id})" style="background: #dc3545; color: white; padding: 5px 10px; font-size: 12px;">
+                                ${user.banned ? 'Разбанить' : 'Забанить'}
+                            </button>
+                        ` : ''}
+                    </div>
+                </div>
+            `).join('');
+
+            // Селект для начисления монет
+            const coinUserSelect = document.getElementById('coinUserSelect');
+            coinUserSelect.innerHTML = '<option value="">Выберите пользователя</option>' + 
+                users.filter(u => !u.banned).map(u => 
+                    `<option value="${u.id}">${u.username} (${u.balance || 0} 67 Coin)</option>`
+                ).join('');
+
+            // Селект для назначения админов
+            const adminUserSelect = document.getElementById('adminUserSelect');
+            adminUserSelect.innerHTML = '<option value="">Выберите пользователя</option>' + 
+                users.filter(u => !u.isAdmin && u.username !== 'ultra67turbo' && !u.banned).map(u => 
+                    `<option value="${u.id}">${u.username}</option>`
+                ).join('');
+
+            // Селект для товаров
+            const adminProductSelect = document.getElementById('adminProductSelect');
+            adminProductSelect.innerHTML = '<option value="">Выберите товар</option>' + 
+                products.map(p => `<option value="${p.id}">${p.name} - ${p.price} 67 Coin</option>`).join('');
+        }
+
+        // ===== АДМИН ФУНКЦИИ =====
+        function banUser(userId) {
+            const user = users.find(u => u.id === userId);
+            if (user) {
+                user.banned = !user.banned;
+                localStorage.setItem('users', JSON.stringify(users));
+                updateAdminPanel();
+                showNotification(`Пользователь ${user.username} ${user.banned ? 'забанен' : 'разбанен'}`);
+            }
+        }
+
+        function addCoins() {
+            const userId = parseInt(document.getElementById('coinUserSelect').value);
+            const amount = parseInt(document.getElementById('coinAmount').value);
+            const reason = document.getElementById('coinReason').value;
+            
+            if (!userId || !amount || amount <= 0) {
+                alert('Выберите пользователя и укажите сумму!');
+                return;
+            }
+            
+            const user = users.find(u => u.id === userId);
+            if (user) {
+                user.balance = (user.balance || 0) + amount;
+                localStorage.setItem('users', JSON.stringify(users));
+                
+                if (currentUser && currentUser.id === user.id) {
+                    document.getElementById('userBalance').textContent = user.balance;
+                }
+                
+                updateAdminPanel();
+                document.getElementById('coinAmount').value = '';
+                document.getElementById('coinReason').value = '';
+                
+                showNotification(`✅ Начислено ${amount} 67 Coin пользователю ${user.username}`);
+            }
+        }
+
+        function makeAdmin() {
+            const userId = parseInt(document.getElementById('adminUserSelect').value);
+            if (!userId) {
+                alert('Выберите пользователя!');
+                return;
+            }
+            
+            const user = users.find(u => u.id === userId);
+            if (user) {
+                user.isAdmin = true;
+                user.role = 'admin';
+                localStorage.setItem('users', JSON.stringify(users));
+                updateAdminPanel();
+                showNotification(`👑 Пользователь ${user.username} назначен администратором!`);
+            }
+        }
+
+        function changeProductPrice() {
+            const productId = parseInt(document.getElementById('adminProductSelect').value);
+            const newPrice = parseInt(document.getElementById('newPrice').value);
+            
+            if (!productId || !newPrice || newPrice <= 0) {
+                alert('Выберите товар и укажите новую цену!');
+                return;
+            }
+            
+            const product = products.find(p => p.id === productId);
+            if (product) {
+                product.price = newPrice;
+                localStorage.setItem('products', JSON.stringify(products));
+                updateAdminPanel();
+                displayProducts();
+                showNotification(`💰 Цена товара "${product.name}" изменена на ${newPrice} 67 Coin`);
+                document.getElementById('newPrice').value = '';
+            }
+        }
+
+        function deleteProductAdmin() {
+            const productId = parseInt(document.getElementById('adminProductSelect').value);
+            
+            if (!productId) {
+                alert('Выберите товар!');
+                return;
+            }
+            
+            const product = products.find(p => p.id === productId);
+            if (product && confirm(`Удалить товар "${product.name}"?`)) {
+                products = products.filter(p => p.id !== productId);
+                localStorage.setItem('products', JSON.stringify(products));
+                updateAdminPanel();
+                displayProducts();
+                showNotification(`🗑️ Товар "${product.name}" удален`);
+            }
+        }
+
+        // ===== ТОВАРЫ =====
+        function displayProducts() {
+            const list = document.getElementById('productList');
+            if (!list) return;
+            
+            if (products.length === 0) {
+                list.innerHTML = '<p style="text-align: center; padding: 50px; grid-column: 1/-1;">📦 Товаров пока нет</p>';
+                return;
+            }
+
+            const categoryNames = {
+                'electronics': '📱 Электроника',
+                'clothing': '👕 Одежда',
+                'home': '🏠 Дом и сад',
+                'sports': '⚽ Спорт',
+                'books': '📚 Книги',
+                'other': '📦 Другое'
+            };
+            
+            let html = '';
+            products.forEach(p => {
+                html += `
+                    <div class="product-card">
+                        <span class="category-badge">${categoryNames[p.category] || p.category}</span>
+                        <img src="https://via.placeholder.com/300x200/667eea/ffffff?text=${p.name.replace(/ /g, '+')}" class="product-image">
+                        <h3 style="margin-bottom: 10px;">${p.name}</h3>
+                        <p style="color: #666; margin-bottom: 15px;">${p.description}</p>
+                        <div class="price">${p.price} 67 Coin</div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 15px; color: #666;">
+                            <span>📦 В наличии: ${p.stock} шт.</span>
+                            <span>👁️ ${p.views || 0}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="color: #666;">Продавец: ${p.seller}</span>
+                        </div>
+                        ${currentUser ? `
+                            <button class="contact-seller-btn" onclick="openChatWithSeller(${p.sellerId}, '${p.seller}')">
+                                💬 Написать продавцу
+                            </button>
+                        ` : ''}
+                    </div>
+                `;
+            });
+            
+            list.innerHTML = html;
+        }
+
+        // ===== ДОБАВЛЕНИЕ ТОВАРА =====
+        function addProduct() {
+            if (!currentUser) {
+                alert('❌ Сначала войдите в систему!');
+                return;
+            }
+
+            if (currentRole !== 'seller') {
+                alert('❌ Переключитесь на роль продавца!');
+                return;
+            }
+
+            const name = document.getElementById('productName').value.trim();
+            const desc = document.getElementById('productDesc').value.trim();
+            const price = parseInt(document.getElementById('productPrice').value);
+            const stock = parseInt(document.getElementById('productStock').value);
+            const category = document.getElementById('productCategory').value;
+            
+            if (!name || !desc || !price || !stock || !category) {
+                alert('❌ Заполните все поля!');
+                return;
+            }
+            
+            const product = {
+                id: Date.now(),
+                name: name,
+                description: desc,
+                price: price,
+                stock: stock,
+                category: category,
+                seller: currentUser.username,
+                sellerId: currentUser.id,
+                date: new Date().toLocaleString(),
+                views: 0,
+                purchases: 0
+            };
+            
+            products.push(product);
+            localStorage.setItem('products', JSON.stringify(products));
+            
+            // Очищаем форму
+            document.getElementById('productName').value = '';
+            document.getElementById('productDesc').value = '';
+            document.getElementById('productPrice').value = '';
+            document.getElementById('productStock').value = '1';
+            
+            displayProducts();
+            showNotification(`✅ Товар "${name}" успешно добавлен!`);
+        }
+
+        // ===== ЧАТЫ =====
+        function getChatId(user1, user2) {
+            return [user1, user2].sort((a,b) => a - b).join('_');
+        }
+
+        function openChatWithSeller(sellerId, sellerName) {
+            if (!currentUser) {
+                alert('❌ Войдите в систему');
+                return;
+            }
+            
+            currentChatUser = { id: sellerId, name: sellerName };
+            showPage('chats');
+            loadDialogs();
+            loadChat(sellerId);
+        }
+
+        function loadDialogs() {
+            if (!currentUser) return;
+            
+            const dialogsList = document.getElementById('dialogsList');
+            if (!dialogsList) return;
+            
+            const userDialogs = new Set();
+            
+            Object.keys(messages).forEach(key => {
+                const [id1, id2] = key.split('_').map(Number);
+                if (id1 === currentUser.id || id2 === currentUser.id) {
+                    const otherId = id1 === currentUser.id ? id2 : id1;
+                    userDialogs.add(otherId);
+                }
+            });
+            
+            if (userDialogs.size === 0) {
+                dialogsList.innerHTML = '<div style="padding: 30px; text-align: center;">💬 Нет диалогов<br><span style="color: #999; font-size: 14px;">Напишите продавцу на странице товара</span></div>';
+                return;
+            }
+            
+            let html = '';
+            userDialogs.forEach(otherId => {
+                const otherUser = users.find(u => u.id === otherId) || { username: 'Пользователь' };
+                const chatId = getChatId(currentUser.id, otherId);
+                const dialogMessages = messages[chatId] || [];
+                const lastMsg = dialogMessages[dialogMessages.length - 1];
+                const unread = dialogMessages.filter(m => m.to === currentUser.id && !m.read).length;
+                
+                html += `
+                    <div class="dialog-item ${currentChatUser?.id === otherId ? 'active' : ''}" onclick="loadChat(${otherId})">
+                        <div class="dialog-avatar">${otherUser.username[0].toUpperCase()}</div>
+                        <div class="dialog-info">
+                            <div class="dialog-name">
+                                <span>${otherUser.username} ${otherUser.isAdmin ? '👑' : ''}</span>
+                                ${unread > 0 ? `<span class="unread-badge">${unread}</span>` : ''}
+                            </div>
+                            <div class="dialog-last-message">
+                                ${lastMsg ? lastMsg.text.substring(0, 40) + (lastMsg.text.length > 40 ? '...' : '') : 'Нет сообщений'}
+                            </div>
+                            <div class="dialog-time">${lastMsg ? lastMsg.time : ''}</div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            dialogsList.innerHTML = html;
+            updateUnreadBadge();
+        }
+
+        function loadChat(userId) {
+            const otherUser = users.find(u => u.id === userId);
+            if (!otherUser) return;
+            
+            currentChatUser = { id: userId, name: otherUser.username };
+            
+            document.getElementById('chatWith').textContent = `Чат с ${otherUser.username} ${otherUser.isAdmin ? '👑' : ''}`;
+            document.getElementById('chatInputArea').style.display = 'flex';
+            document.getElementById('chatPlaceholder').style.display = 'none';
+            
+            const chatId = getChatId(currentUser.id, userId);
+            const chatMessages = messages[chatId] || [];
+            
+            // Отмечаем сообщения как прочитанные
+            if (messages[chatId]) {
+                messages[chatId].forEach(m => {
+                    if (m.to === currentUser.id) m.read = true;
+                });
+                localStorage.setItem('messages', JSON.stringify(messages));
+            }
+            
+            const messagesContainer = document.getElementById('chatMessages');
+            let html = '';
+            
+            chatMessages.forEach(msg => {
+                const isSent = msg.from === currentUser.id;
+                html += `
+                    <div class="message ${isSent ? 'sent' : 'received'}">
+                        <div class="message-content">${msg.text}</div>
+                        <div class="message-time">${msg.time}</div>
+                    </div>
+                `;
+            });
+            
+            messagesContainer.innerHTML = html;
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            
+            loadDialogs();
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const text = input.value.trim();
+            
+            if (!text || !currentUser || !currentChatUser) return;
+            
+            const chatId = getChatId(currentUser.id, currentChatUser.id);
+            
+            if (!messages[chatId]) {
+                messages[chatId] = [];
+            }
+            
+            const message = {
+                id: Date.now(),
+                from: currentUser.id,
+                to: currentChatUser.id,
+                text: text,
+                time: new Date().toLocaleString(),
+                read: false
+            };
+            
+            messages[chatId].push(message);
+            localStorage.setItem('messages', JSON.stringify(messages));
+            
+            input.value = '';
+            loadChat(currentChatUser.id);
+            showNotification('✉️ Сообщение отправлено');
+        }
+
+        function updateUnreadBadge() {
+            const badge = document.getElementById('unreadBadge');
+            if (!currentUser) {
+                badge.style.display = 'none';
+                return;
+            }
+            
+            let unread = 0;
+            Object.keys(messages).forEach(key => {
+                const [id1, id2] = key.split('_').map(Number);
+                if (id1 === currentUser.id || id2 === currentUser.id) {
+                    messages[key].forEach(m => {
+                        if (m.to === currentUser.id && !m.read) unread++;
+                    });
+                }
+            });
+            
+            badge.textContent = unread;
+            badge.style.display = unread > 0 ? 'inline-block' : 'none';
+        }
+
+        // ===== АВТОРИЗАЦИЯ =====
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            const user = users.find(u => u.username === username && u.password === password);
+            
+            if (user) {
+                if (user.banned) {
+                    alert('❌ Этот аккаунт заблокирован!');
+                    return;
+                }
+
+                currentUser = user;
+                currentRole = 'buyer';
+                
+                document.getElementById('loginForm').style.display = 'none';
+                document.getElementById('userInfo').style.display = 'block';
+                document.getElementById('currentUser').textContent = `👤 ${user.username}${user.isAdmin ? ' 👑' : ''}`;
+                document.getElementById('balanceDisplay').style.display = 'flex';
+                document.getElementById('userBalance').textContent = user.balance || 0;
+                
+                // Показываем кнопку админа если админ
+                const adminRoleBtn = document.getElementById('adminRoleBtn');
+                if (adminRoleBtn) {
+                    adminRoleBtn.style.display = user.isAdmin ? 'block' : 'none';
+                }
+                
+                displayProducts();
+                updateUnreadBadge();
+                showPage('market');
+                showNotification(`✅ Добро пожаловать, ${user.username}!`);
+            } else {
+                alert('❌ Неверный логин или пароль!');
+            }
+        }
+
+        function logout() {
+            currentUser = null;
+            currentChatUser = null;
+            
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('userInfo').style.display = 'none';
+            document.getElementById('sellerPanel').style.display = 'none';
+            document.getElementById('adminPanel').style.display = 'none';
+            document.getElementById('balanceDisplay').style.display = 'none';
+            
+            displayProducts();
+            showPage('market');
+            showNotification('👋 Вы вышли из системы');
+        }
+
+        function setRole(role) {
+            currentRole = role;
+            
+            document.querySelectorAll('.role-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent.toLowerCase().includes(role)) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            document.getElementById('sellerPanel').style.display = role === 'seller' ? 'block' : 'none';
+            document.getElementById('adminPanel').style.display = (role === 'admin' && isAdmin()) ? 'block' : 'none';
+            
+            if (role === 'admin' && isAdmin()) {
+                updateAdminPanel();
+            }
+        }
+
+        function register() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (!username || !password) {
+                alert('❌ Заполните все поля!');
+                return;
+            }
+
+            if (users.find(user => user.username === username)) {
+                alert('❌ Пользователь уже существует!');
+                return;
+            }
+
+            const user = {
+                id: Date.now(),
+                username,
+                password,
+                isAdmin: false,
+                role: 'user',
+                balance: 0,
+                registered: new Date().toLocaleString(),
+                banned: false
+            };
+
+            users.push(user);
+            localStorage.setItem('users', JSON.stringify(users));
+            alert('✅ Регистрация успешна! Ваш баланс: 0 67 Coin');
+        }
+
+        // ===== НАВИГАЦИЯ =====
+        function showPage(page) {
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            document.getElementById('marketPage').style.display = 'none';
+            document.getElementById('chatsPage').style.display = 'none';
+            
+            if (page === 'market') {
+                document.getElementById('marketPage').style.display = 'block';
+                displayProducts();
+            } else if (page === 'chats') {
+                document.getElementById('chatsPage').style.display = 'block';
+                loadDialogs();
+                
+                if (currentChatUser) {
+                    loadChat(currentChatUser.id);
+                } else {
+                    document.getElementById('chatWith').textContent = 'Выберите чат';
+                    document.getElementById('chatInputArea').style.display = 'none';
+                    document.getElementById('chatPlaceholder').style.display = 'flex';
+                    document.getElementById('chatMessages').innerHTML = '';
+                }
+            }
+        }
+
+        // ===== АВТОВХОД ДЛЯ АДМИНА =====
+        function autoLoginAdmin() {
+            const admin = users.find(u => u.username === 'ultra67turbo');
+            if (admin) {
+                setTimeout(() => {
+                    currentUser = admin;
+                    currentRole = 'admin';
+                    
+                    document.getElementById('loginForm').style.display = 'none';
+                    document.getElementById('userInfo').style.display = 'block';
+                    document.getElementById('currentUser').textContent = `👤 ${admin.username} 👑`;
+                    document.getElementById('balanceDisplay').style.display = 'flex';
+                    document.getElementById('userBalance').textContent = admin.balance || 100000;
+                    
+                    const adminRoleBtn = document.getElementById('adminRoleBtn');
+                    if (adminRoleBtn) {
+                        adminRoleBtn.style.display = 'block';
+                    }
+                    
+                    displayProducts();
+                    updateUnreadBadge();
+                    showPage('market');
+                    showNotification('👑 Добро пожаловать, Администратор!');
+                }, 500);
+            }
+        }
+
+        // ===== ЗАПУСК =====
+        window.onload = function() {
+            displayProducts();
+            autoLoginAdmin();
+        };
+    </script>
+</body>
+</html>
